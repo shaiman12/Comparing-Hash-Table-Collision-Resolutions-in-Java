@@ -1,19 +1,30 @@
+import java.util.ArrayList;
 
-public class HashTable {
+
+public class HashTableChaining{
 	private int tablesize;
-	protected Item[] table;
+	protected LinkedList[] table;
 	protected int amount;
 	protected int loadfactor;
 	protected int[] probesInsert;
 	protected int[] probesSearch;
-	public HashTable(int tablesize) {
+	private int searchesPerformed;
+	
+	public HashTableChaining(int tablesize) {
 		this.setTablesize(tablesize);
-		table = new Item[tablesize];
+		table = new LinkedList[tablesize];
+		for(int i = 0;i<tablesize;i++) {
+			table[i] = new LinkedList();
+		}
 		probesInsert = new int[500];
 		probesSearch = new int[500];
 		amount = 0;
 		loadfactor =0;
+		searchesPerformed = 0;
+		
+		
 	}
+	
 	
 	public int hash(String key) {
 		int hashVal = 0;
@@ -26,7 +37,9 @@ public class HashTable {
 		}
 		return hashVal;
 	}
-
+	
+	
+	
 	public int getTablesize() {
 		return tablesize;
 	}
@@ -35,19 +48,34 @@ public class HashTable {
 		this.tablesize = tablesize;
 	}
 	
+	public void insert(Item x) {
+		int probe = 0;
+		int h = hash(x.getDate());
+		
+		table[h].addToStart(x);
+		amount++;
+		probesInsert[amount-1] = 1;
+		fixLoadFactor();
+		
+		
+		
+	}
+	
+	public String find(String key) {
+		
+		int h = hash(key);
+		String output = table[h].find(key);
+		probesSearch[searchesPerformed] = table[h].getProbes();
+		searchesPerformed++;
+		return output;
+		
+	}
+	
 	public void fixLoadFactor() {
 		if(amount!=0) {
 			loadfactor=amount/tablesize;
 		}
 	}
 	
-
-
 	
-	
-	
-	
-	
-	
-
 }
