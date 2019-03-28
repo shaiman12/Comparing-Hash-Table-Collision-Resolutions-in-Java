@@ -54,7 +54,7 @@ public class HashTableChaining{
 		
 		table[h].addToStart(x);
 		amount++;
-		probesInsert[amount-1] = 1;
+		probesInsert[amount-1] = table[h].getProbes();
 		fixLoadFactor();
 		
 		

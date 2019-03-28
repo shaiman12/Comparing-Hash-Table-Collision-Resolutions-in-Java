@@ -123,6 +123,17 @@ public class LinkedList {
 	}
 	
 	public void addToStart(Item data) {
+		probes = 0;
+		boolean exists = false;
+		Node position = head;
+		while(position!=null) {
+			probes++;
+			if(position.data.equals(data)) {
+				System.out.println("Cannot have duplicates");
+				return;
+			}
+			position=position.link;
+		}
 		head = new Node(data, head);
 	}
 	
