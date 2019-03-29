@@ -1,5 +1,5 @@
 
-public class HashTable {
+public abstract class HashTable {
 	private int tablesize;
 	protected Item[] table;
 	protected int amount;
@@ -41,11 +41,19 @@ public class HashTable {
 		}
 	}
 	
+	public abstract void insert(Item x);
 
 
 	
-	
-	
+	public void printTable() {
+		for(int i = 0;i<tablesize;i++) {
+			if(table[i]!=null) {
+			System.out.println(table[i].getDate());}
+			else {
+				System.out.println("Null");
+			}
+		}
+	}
 	
 	
 	

@@ -10,13 +10,14 @@ public class HashTableQuadratic extends HashTable{
 		int probe = 0;
 		if(amount==table.length) {
 			System.out.println("Quadratic Insertion Failed: Table is full");
-			return;
+			System.exit(0);
 		}
 		int h = hash(x.getDate());
 		while(table[h]!=null) {
 			probe++;
 			if(probe>getTablesize()) {
 				System.out.println("Quadratic Probe Failure: Number of probes exceed table size");
+				System.exit(0);
 				return ;
 			}
 			h = (h<<1)%getTablesize();

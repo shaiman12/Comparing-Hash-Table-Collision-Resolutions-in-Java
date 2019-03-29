@@ -12,6 +12,7 @@ public class HashTableLinear extends HashTable{
 		int probe = 0;
 		if(amount==table.length) {
 			System.out.println("Linear Insertion Failed: Table is full");
+			System.exit(0);
 			return;
 		}
 		int h = hash(x.getDate());
