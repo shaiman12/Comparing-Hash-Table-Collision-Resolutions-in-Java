@@ -5,10 +5,10 @@ public class HashTableChaining{
 	private int tablesize;
 	protected LinkedList[] table;
 	protected int amount;
-	protected int loadfactor;
+	protected  double loadfactor;
 	protected int[] probesInsert;
 	protected int[] probesSearch;
-	private int searchesPerformed;
+	protected int searchProbes;
 	
 	public HashTableChaining(int tablesize) {
 		this.setTablesize(tablesize);
@@ -20,7 +20,7 @@ public class HashTableChaining{
 		probesSearch = new int[500];
 		amount = 0;
 		loadfactor =0;
-		searchesPerformed = 0;
+		
 		
 		
 	}
@@ -49,8 +49,10 @@ public class HashTableChaining{
 	}
 	
 	public void insert(Item x) {
-		int probe = 0;
 		int h = hash(x.getDate());
+		if(!table[h].find(x.getDate()).equals("Item not found")) {
+			return;
+		}
 		
 		table[h].addToStart(x);
 		amount++;
@@ -65,17 +67,35 @@ public class HashTableChaining{
 		
 		int h = hash(key);
 		String output = table[h].find(key);
-		probesSearch[searchesPerformed] = table[h].getProbes();
-		searchesPerformed++;
+		searchProbes=table[h].getProbes();
 		return output;
 		
 	}
 	
 	public void fixLoadFactor() {
-		if(amount!=0) {
-			loadfactor=amount/tablesize;
-		}
+		
+			loadfactor=amount/(double)tablesize;
+		
 	}
 	
+	public int totalInsertProbes() {
+		int sum  =0;
+		for(int i = 0;i<probesInsert.length;i++) {
+			sum+=probesInsert[i];
+		}
+		return sum;
+	}
+	
+	
+	public void printTable() {
+		for(int i = 0;i<tablesize;i++) {
+			if(table[i].isEmpty()==false) {
+			table[i].outputList();
+			System.out.println("");}
+			else {
+				System.out.println("Null");
+			}
+		}
+	}
 	
 }

@@ -1,9 +1,9 @@
 
 public class HashTableQuadratic extends HashTable{
-	private int searchesPerformed;
+
 	public HashTableQuadratic(int tablesize) {
 		super(tablesize);
-		searchesPerformed = 0;
+		
 	}
 	
 	public void insert(Item x) {
@@ -30,19 +30,18 @@ public class HashTableQuadratic extends HashTable{
 	
 	
 	public String find(String key) {
-		int probe = 0;
+	
+		searchProbe = 0;
 		int h = hash(key);
 		while(table[h]!=null) {
 			if(table[h].getDate().equalsIgnoreCase(key)) {
-				probesSearch[searchesPerformed] = probe;
-				searchesPerformed++;
+				
 				return table[h].toString();
 			}
-			probe++;
+			searchProbe++;
 			h=(h<<1)%getTablesize();
 		}
-		
-		searchesPerformed++;
+	
 	return "Not Found";
 	}
 	

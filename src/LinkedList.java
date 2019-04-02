@@ -123,7 +123,6 @@ public class LinkedList {
 	}
 	
 	public void addToStart(Item data) {
-		probes = 0;
 		boolean exists = false;
 		Node position = head;
 		while(position!=null) {
@@ -169,7 +168,7 @@ public class LinkedList {
 	public void outputList() {
 		Node pos = head;
 		while(pos!=null) {
-			System.out.println(pos.data);
+			System.out.print(pos.data.getDate()+"\t");
 			pos=pos.link;
 		}
 	}

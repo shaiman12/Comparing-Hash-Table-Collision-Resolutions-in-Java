@@ -3,16 +3,18 @@ public abstract class HashTable {
 	private int tablesize;
 	protected Item[] table;
 	protected int amount;
-	protected int loadfactor;
+	protected double loadfactor;
 	protected int[] probesInsert;
-	protected int[] probesSearch;
+	protected int searchProbe;
+	protected int searchesPerformed;
 	public HashTable(int tablesize) {
 		this.setTablesize(tablesize);
 		table = new Item[tablesize];
 		probesInsert = new int[500];
-		probesSearch = new int[500];
+		searchProbe = 0;
 		amount = 0;
 		loadfactor =0;
+		searchesPerformed = 0;
 	}
 	
 	public int hash(String key) {
@@ -37,12 +39,12 @@ public abstract class HashTable {
 	
 	public void fixLoadFactor() {
 		if(amount!=0) {
-			loadfactor=amount/tablesize;
+			loadfactor=amount/(double)tablesize;
 		}
 	}
 	
 	public abstract void insert(Item x);
-
+	public abstract String find(String key);
 
 	
 	public void printTable() {
@@ -54,6 +56,15 @@ public abstract class HashTable {
 			}
 		}
 	}
+	
+	public int totalInsertProbes() {
+		int sum  =0;
+		for(int i = 0;i<probesInsert.length;i++) {
+			sum+=probesInsert[i];
+		}
+		return sum;
+	}
+	
 	
 	
 	
