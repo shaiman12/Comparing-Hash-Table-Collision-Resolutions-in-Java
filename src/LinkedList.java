@@ -1,34 +1,66 @@
 import java.util.NoSuchElementException;
-
+/**
+ * This is a class that stores a linked list.
+ * It has a private inner class to store a node in the linked list
+ * There are many methods that are used for linked lists
+ * This was based off the lecture slides from first year computer science CSC1016S course at UCT
+ * Creates an instance variable that stores the head node
+ * Stores an instance variable called probe that counts the probes per insert or search and initially sets it to zero
+ * @author ShaiAarons
+ *
+ */
 public class LinkedList {
 	
-	//Node Class
+	/**
+	 * This is the node inner class that stores a node that is part of the linked list.
+	 * It has an instance variable that stores the power usage object and a link to the next node in the linked list
+	 * @author ShaiAarons
+	 *
+	 */
 	private class Node{
 		private Item data;
 		private Node link;
-		
+		/**
+		 * No-arguments constructor that sets the link and data to null
+		 */
 		public Node() {
 			data = null;
 			link = null;
 		}
-		
+		/**
+		 * constructor that creates a node and instantiates the instance variables
+		 * @param data the power usage object that is being stored
+		 * @param link the link to the next node in the linked list
+		 */
 		public Node(Item data, Node link) {
 			this.data= data;
 			this.link = link;
 		}
-
+/**
+ * 
+ * @return the power usage object
+ */
 		public Item getData() {
 			return data;
 		}
-
+/**
+ * sets the power usage object
+ * @param data the object that is being set
+ */
 		public void setData(Item data) {
 			this.data = data;
 		}
-
+/**
+ * 
+ * @return the link to the next node
+ */
 		public Node getLink() {
 			return link;
 		}
-
+/**
+ * Change the link to the next node
+ * @param link link to be updated
+ */
 		public void setLink(Node link) {
 			this.link = link;
 		}
@@ -39,89 +71,14 @@ public class LinkedList {
 	
 	private Node head;
 	private int probes = 0;
-	public class ListIterator{
-		private Node position;
-		private Node previous;
-		
-		public ListIterator() {
-			position = head;
-			previous = null;
-			
-		}
-		
-		
-		
-		public void restart() {
-			position = head;
-			previous = null;
-		}
-		
-		
-		
-		public boolean hasNext() {
-			return (position!=null);
-		}
-		
-		
-		
-		public String next() {
-			if(!hasNext()) {
-				throw new NoSuchElementException();
-			}
-			String toReturn = position.data.toString();
-			previous = position;
-			position  = position.link;
-
-			return toReturn;
-		}
-		
-		public String peek() {
-			if(!hasNext()) {
-				throw new NoSuchElementException();
-			}
-			return position.data.toString();
-		}
-		
-		public void addHere(Item data) {
-			if(position == null && previous!=null) {
-				previous.link = new Node(data,null);
-			}
-			else if (position==null||previous==null) {
-				addToStart(data);
-			}
-			else {
-				Node temp = new Node(data, position);
-				previous.link = temp;
-				previous = temp;
-			}
-			
-			
-		}
-		
-		public void Delete() {
-			if(position==null) {
-				throw new IllegalStateException();
-			}else if (previous==null) {
-				head = head.link;
-				position = head;
-			}else {
-				previous.link = position.link;
-				position = position.link;
-				
-			}
-			
-			
-			
-		}
-		
-		
-		
-	}
 	
-	public ListIterator iterator() {
-		return new ListIterator();
-	}
 	
+	/**
+	 * This method adds a node to the start of the linked list
+	 * It ensures there are no duplicates
+	 * The probe count is updated
+	 * @param data power usage item to be stored in the linked list
+	 */
 	public void addToStart(Item data) {
 		boolean exists = false;
 		Node position = head;
@@ -136,11 +93,16 @@ public class LinkedList {
 		head = new Node(data, head);
 	}
 	
-	
+	/**
+	 * clears the linked list
+	 */
 	public void clear() {
 		head = null;
 	}
-	
+	/**
+	 * Checks if a linked list is empty
+	 * @return boolean value stating true if empty and false if not empty
+	 */
 	public boolean isEmpty() {
 		if(head==null) {
 			return true;
@@ -149,7 +111,10 @@ public class LinkedList {
 		}
 	}
 	
-	
+	/**
+	 * Returns the size of the linked list
+	 * @return the size of the linked list
+	 */
 	public int size () {
 		Node pos = head;
 		int count  = 0;
@@ -160,11 +125,15 @@ public class LinkedList {
 	
 	return count;
 	}
-	
+	/**
+	 * constructor that sets head equal to null
+	 */
 	public LinkedList() {
 		head = null;
 	}
-	
+	/**
+	 * Outputs all the date/time values in the linked list
+	 */
 	public void outputList() {
 		Node pos = head;
 		while(pos!=null) {
@@ -172,7 +141,12 @@ public class LinkedList {
 			pos=pos.link;
 		}
 	}
-	
+	/**
+	 * Method for searching the linked list for a specific key
+	 * Traverses the linked list and returns the date/time value the user is searching for
+	 * Initially sets probes equal to zero and then updates the probe count for every probe required
+	 * @param key the key that the user is searching for
+	 */
 	public String find(String x) {
 		probes = 0;
 		Node position = head;
@@ -187,7 +161,10 @@ public class LinkedList {
 		}
 		return  "Item not found";
 	}
-
+/**
+ * Returns the total probes for any search or insert operation
+ * @return the total amount of probes 
+ */
 		public int getProbes() {
 			return probes;
 		}

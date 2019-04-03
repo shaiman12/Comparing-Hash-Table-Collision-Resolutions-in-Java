@@ -1,10 +1,23 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-
+/**
+ * This is the main class that will run procedures regarding interacting with various types of hash table
+ * The user will choose which collision resolution they wish to use, the size of the table (Which will be checked by this program if it is a prime number),
+ * the data file from which input will be recieved, and the amount of random keys the user wishes to search for
+ * It has instance variables to store a hash table (which uses linear or quadratic probing) and a hash table which uses chaining
+ * It has instance variables for storing a list of all the date/time keys and an array that randomizes those keys to a specific size of an array as specified by the user
+ * @author ShaiAarons
+ * @author https://beginnersbook.com/2014/01/java-program-to-check-prime-number/ for the prime number checker
+ *
+ */
 public class PowerHashApp {
 	public static HashTable table;
 	public static HashTableChaining tableChaining;
@@ -12,7 +25,11 @@ public class PowerHashApp {
 	public static String[] searchKeys;
 	public static int probesSearch[];
 	
-	
+	/**
+	 * This method builds the hash table to the requirements as specified by the user
+	 * @param file the file with the input data
+	 * @param choice a value to represent if chaining is used as the collision resolution or not
+	 */
 	public static void build(String file, int choice) {
 		try {
 			Scanner scan = new Scanner(new File(file));
@@ -47,7 +64,9 @@ public class PowerHashApp {
 		}
 	}
 	
-	
+	/**
+	 * Reads in "FileWithSearchKeys.txt" to create an array that stores all the keys from the "cleaned_data.csv" file
+	 */
 	public static void makeArray() {
 		try {
 			Scanner scan = new Scanner(new File("FileWithSearchKeys.txt"));
@@ -68,7 +87,10 @@ public class PowerHashApp {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * This creates a subset of the original array whereby the keys are in a random sequence and the size of this array is specified by the user
+	 * @param size The amount of keys the user wishes for the program to search for
+	 */
 	public static void makeShuffledArray(int size) {
 		Collections.shuffle(searchKeysUnshuffled);
 		searchKeys = new String[size];
@@ -80,7 +102,11 @@ public class PowerHashApp {
 	
 	
 	
-	
+	/**
+	 * Checks if a number is a prime number
+	 * @param x the number being checked
+	 * @return true if it is prime, false if not prime
+	 */
 	public static boolean checkPrime(int x) {
 		boolean isPrime = true;
 		if(x==1) {
@@ -97,7 +123,11 @@ public class PowerHashApp {
 		
 		return isPrime;
 	}
-	
+	/**
+	 * This is the method that runs the sequence of searches and records the probe count for each search. 
+	 * It stores the probeCount for each search in an array called probeSearch
+	 * @param chaining an integer value which determines if chaining is the chosen collision resolution
+	 */
 	public static void searchSequence(int chaining) {
 
 		if(chaining==0) {
@@ -113,7 +143,10 @@ public class PowerHashApp {
 		}
 		
 	}
-	
+	/**
+	 * Returns the total amount of probes over all searches
+	 * @return the sum of probes over all searches
+	 */
 	public static int totalSearchProbes() {
 		int sum = 0;
 		for(int i =0;i<probesSearch.length;i++) {
@@ -121,11 +154,18 @@ public class PowerHashApp {
 		}
 		return sum;
 	}
-	
+	/**
+	 * Gets the average amount of probes per search
+	 * @param keys the amount of searches that have taken place
+	 * @return the average amount of probes per search
+	 */
 	public static double getAveProbes(int keys) {
 		return (double)totalSearchProbes()/keys;
 	}
-	
+	/**
+	 * Gets the instance whereby there was the maximum amount of probes over all the searches
+	 * @return the highest amount of probes over all searches
+	 */
 	public static int getMaxProbes() {
 		int max = 0;
 		for(int i = 0;i<probesSearch.length;i++) {
@@ -137,9 +177,41 @@ public class PowerHashApp {
 		
 		return max;
 	}
+	/**
+	 * This writes to a specified file the information recorded by the program, as recieved as parameters:
+	 * @param chaining an integer value determining if chaining has been used as the collision resolution or not
+	 * @param loadfactor the load factor of a hash table
+	 * @param probeCount the total amount of probes over all inserts
+	 * @param searchProbes the total amount of probes over all searches
+	 * @param average the average amount of probes over all searches
+	 * @param max the highest amount of probes over all searches
+	 */
+	public static void writer(int chaining, double loadfactor, int probeCount, int searchProbes, double average, int max) {
+		FileWriter writer;
+		try {
+			writer = new FileWriter("InsertionPerformanceChaining.csv", true);
+			BufferedWriter bw = new BufferedWriter(writer);
+			PrintWriter pw = new PrintWriter(bw);
+			if(chaining==0) {
+			pw.println(table.getTablesize()+","+loadfactor+","+probeCount+","+searchProbes+","+average+","+max);}
+			else {
+				pw.println(tableChaining.getTablesize()+","+loadfactor+","+probeCount+","+searchProbes+","+average+","+max);
+			}
+			pw.flush();
+			pw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
-
-	public static void main(String[] args) {
+/**
+ * Main class that runs the sequence
+ * @param args
+ * @throws IOException
+ */
+	public static void main(String[] args) throws IOException {
 		boolean isPrime = false;
 		int x =0;
 		int chaining = 0;
@@ -203,14 +275,25 @@ public class PowerHashApp {
 			System.out.println("Total amount of probes required for all insertions:\t"+table.totalInsertProbes());
 			
 			
+			
 		}else {
 			System.out.println("Load Factor:\t"+tableChaining.loadfactor);
 			System.out.println("Total amount of probes required for all insertions:\t"+tableChaining.totalInsertProbes());
 			
 		}
+		
+		
+		
+		
+		if(keys!=0) {
 		System.out.println("Total number of probes generated over "+keys+" searches:\t"+totalSearchProbes());
 		System.out.println("Average number of probes per search:\t"+getAveProbes(keys));
 		System.out.println("The maximum number of probes over the set of K searches:\t"+getMaxProbes());
-	}
+		if(chaining==0) {
+			writer(chaining, table.loadfactor, table.totalInsertProbes(), totalSearchProbes(), getAveProbes(keys),getMaxProbes());
+		}else {
+			writer(chaining, tableChaining.loadfactor, tableChaining.totalInsertProbes(), totalSearchProbes(), getAveProbes(keys),getMaxProbes());
+		}
+	}}
 
 }
